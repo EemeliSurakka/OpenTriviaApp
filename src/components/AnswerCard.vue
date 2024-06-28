@@ -1,22 +1,26 @@
 <template>
-  <div :class="$style.answerCard">
+  <div :class="[$style.container, wasCorrectAnswer !== null ? (wasCorrectAnswer ? $style.correct : $style.incorrect) : '']">
     {{ sanitizedAnswer }}
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import DOMPurify from 'dompurify'
+import { computed } from 'vue';
+import DOMPurify from 'dompurify';
 
 const props = defineProps({
-  answer: String
+  answer: String,
+  wasCorrectAnswer: {
+    type: Boolean,
+    default: null,
+  },
 });
 
 const sanitizedAnswer = computed(() => DOMPurify.sanitize(props.answer));
 </script>
 
 <style module>
-.answerCard {
+.container {
   border: 1px solid #ccc;
   padding: 8px;
   border-radius: 4px;
@@ -26,9 +30,16 @@ const sanitizedAnswer = computed(() => DOMPurify.sanitize(props.answer));
   color: white;
 
   @media (max-width: 800px) {
-      padding: 16px;
-      font-size: 1.75rem;
+    padding: 16px;
+    font-size: 1.75rem;
   }
 }
 
+.correct {
+  border-color: green;
+}
+
+.incorrect {
+  border-color: red;
+}
 </style>

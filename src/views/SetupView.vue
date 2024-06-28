@@ -34,9 +34,9 @@ const handleStartClick = async () => {
 
 <style module>
 .container {
+  padding-top: 10rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 100vh;
   text-align: center;

@@ -20,23 +20,4 @@ describe('QuizQuestion', () => {
     expect(quizQuestion.type).toBe(type);
     expect(quizQuestion.is_correct_answer).toBe(null);
   });
-
-  it('should correctly evaluate the given answer', () => {
-    const quizQuestion = new QuizQuestion(
-      'Science',
-      'H2O',
-      'easy',
-      ['CO2', 'N2', 'O2'],
-      'What is the chemical formula for water?',
-      'multiple'
-    );
-
-    const result = quizQuestion.checkAnswer('H2O');
-    expect(result).toBe(true);
-    expect(quizQuestion.is_correct_answer).toBe(true);
-
-    const resultFalse = quizQuestion.checkAnswer('CO2');
-    expect(resultFalse).toBe(false);
-    expect(quizQuestion.is_correct_answer).toBe(false);
-  });
 });

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.quizQuestion">
+  <div :class="$style.container">
     <h2 :class="$style.question" v-html="sanitizedQuestion"></h2>
     <div :class="$style.answers">
       <slot></slot>
@@ -20,7 +20,7 @@ const sanitizedQuestion = computed(() => DOMPurify.sanitize(props.quizQuestion.q
 </script>
 
 <style module>
-.quizQuestion {
+.container {
   padding: 2rem;
   width: 50rem;
   text-align: center;

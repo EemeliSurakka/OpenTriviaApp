@@ -1,11 +1,11 @@
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 
 export function useNavigation() {
-  const router = useRouter();
+  const router = useRouter()
 
   async function navigateTo(route) {
-    await router.push(route);
+    await router.push(route)
   }
 
-  return { navigateTo };
+  return { navigateTo }
 }

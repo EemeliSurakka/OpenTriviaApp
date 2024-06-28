@@ -51,5 +51,5 @@ describe('useGameStore', () => {
 
     store.setQuestions(questions)
     expect(() => store.setCorrectAnswer(2, '4')).toThrowError('Question not found')
-  });
+  })
 })

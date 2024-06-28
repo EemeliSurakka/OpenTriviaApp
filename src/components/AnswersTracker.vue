@@ -6,7 +6,8 @@
       :class="[
         $style.ball,
         questionStatus[index] === null ? $style.unanswered :
-        questionStatus[index] ? $style.correct : $style.incorrect
+        questionStatus[index] ? $style.correct : $style.incorrect,
+        index === currentQuestionIndex ? $style.current : ''
       ]"
     ></div>
   </div>
@@ -20,6 +21,10 @@ defineProps({
   },
   questionStatus: {
     type: Array,
+    required: true
+  },
+  currentQuestionIndex: {
+    type: Number,
     required: true
   }
 });
@@ -48,5 +53,9 @@ defineProps({
 
 .incorrect {
   background-color: red;
+}
+
+.current {
+  background-color: yellow;
 }
 </style>

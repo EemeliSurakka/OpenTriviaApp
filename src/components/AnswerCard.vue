@@ -1,12 +1,12 @@
 <template>
   <div :class="[$style.container, wasCorrectAnswer !== null ? (wasCorrectAnswer ? $style.correct : $style.incorrect) : '']">
-    {{ sanitizedAnswer }}
+    <span v-html="sanitizedAnswer" />
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import DOMPurify from 'dompurify';
+import { sanitizeHTML } from '@/utils/utils.js'
 
 const props = defineProps({
   answer: String,
@@ -16,7 +16,7 @@ const props = defineProps({
   },
 });
 
-const sanitizedAnswer = computed(() => DOMPurify.sanitize(props.answer));
+const sanitizedAnswer = computed(() => sanitizeHTML(props.answer));
 </script>
 
 <style module>
@@ -28,6 +28,8 @@ const sanitizedAnswer = computed(() => DOMPurify.sanitize(props.answer));
   margin: 4px 0;
   text-align: center;
   color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
 
   @media (max-width: 800px) {
     padding: 16px;

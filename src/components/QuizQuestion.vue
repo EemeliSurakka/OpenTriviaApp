@@ -9,14 +9,14 @@
 
 <script setup>
 import QuizQuestion from '@/classes/QuizQuestion.js';
-import DOMPurify from 'dompurify';
 import { computed } from 'vue';
+import { sanitizeHTML } from '@/utils/utils.js'
 
 const props = defineProps({
   quizQuestion: QuizQuestion,
 });
 
-const sanitizedQuestion = computed(() => DOMPurify.sanitize(props.quizQuestion.question));
+const sanitizedQuestion = computed(() => sanitizeHTML(props.quizQuestion.question));
 </script>
 
 <style module>

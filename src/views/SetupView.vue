@@ -8,9 +8,11 @@
         <option value="medium">Medium</option>
         <option value="hard">Hard</option>
       </select>
-      <button @click="handleStartClick" :class="$style.button">Start</button>
-      <p v-if="loading">Loading...</p>
-      <p v-if="error">{{ error }}</p>
+      <button @click="handleStartClick" :class="$style.button" :disabled="loading">
+        <span v-if="loading" :class="$style.spinner"></span>
+        <span v-else>Start</span>
+      </button>
+      <p :class="$style.error" v-if="error">Oops... Something went wrong. Please try again in a bit.</p>
     </div>
   </section>
 </template>
@@ -18,17 +20,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useInitGame } from '@/composables/useInitGame.js';
-import { useNavigation } from '@/composables/useNavigation';
 
 const selectedDifficulty = ref('easy');
-const { navigateTo } = useNavigation();
 const { loading, error, startGame } = useInitGame();
 
 const handleStartClick = async () => {
   await startGame(selectedDifficulty.value);
-  if (!error.value) {
-    navigateTo('/quiz');
-  }
 };
 </script>
 
@@ -91,9 +88,33 @@ const handleStartClick = async () => {
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-.button:hover {
+.button:disabled {
   background-color: #0056b3;
+  cursor: not-allowed;
+}
+
+.spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+.error {
+  color: red;
+  margin-top: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

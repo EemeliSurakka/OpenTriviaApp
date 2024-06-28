@@ -2,11 +2,13 @@ import { ref } from 'vue';
 import { triviaService } from '@/services/triviaService';
 import QuizQuestion from '@/classes/QuizQuestion';
 import { useGameStore } from '@/stores/useGameStore';
+import { useRouter } from 'vue-router'
 
 export function useInitGame() {
   const loading = ref(false);
   const error = ref(null);
   const gameStore = useGameStore();
+  const router = useRouter();
 
   const startGame = async (difficulty) => {
     loading.value = true;
@@ -28,9 +30,16 @@ export function useInitGame() {
     }
 
     loading.value = false;
+
+    if (
+      !error.value
+      && !loading.value
+      && gameStore.questions.length > 0
+    ) {
+      router.push('/quiz');
+    }
   };
 
-  // Todo: Handle error
 
   return {
     loading,

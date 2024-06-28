@@ -5,9 +5,12 @@
       :key="question.id"
       :class="[
         $style.ball,
-        questionStatus[index] === null ? $style.unanswered :
-        questionStatus[index] ? $style.correct : $style.incorrect,
-        index === currentQuestionIndex ? $style.current : ''
+        questionStatus[index] === null
+          ? $style.unanswered
+          : questionStatus[index]
+            ? $style.correct
+            : $style.incorrect,
+        index === currentQuestionIndex && questionStatus[index] === null ? $style.current : ''
       ]"
     ></div>
   </div>
@@ -27,7 +30,7 @@ defineProps({
     type: Number,
     required: true
   }
-});
+})
 </script>
 
 <style module>
@@ -40,7 +43,7 @@ defineProps({
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: grey; /* Default color for unanswered questions */
+  background-color: grey;
 }
 
 .unanswered {

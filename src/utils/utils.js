@@ -1,5 +1,5 @@
-import DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify'
 
 export function sanitizeHTML(html) {
-  return DOMPurify.sanitize(html);
+  return DOMPurify.sanitize(html)
 }

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Represents a single quiz question.
@@ -23,14 +23,14 @@ export default class QuizQuestion {
    * @param {string} type
    */
   constructor(category, correct_answer, difficulty, incorrect_answers, question, type) {
-    this.id = uuidv4();
-    this.category = category;
-    this.correct_answer = correct_answer;
-    this.difficulty = difficulty;
-    this.incorrect_answers = incorrect_answers;
-    this.question = question;
-    this.type = type;
-    this.is_correct_answer = null; // Value is null when not yet answered.
+    this.id = uuidv4()
+    this.category = category
+    this.correct_answer = correct_answer
+    this.difficulty = difficulty
+    this.incorrect_answers = incorrect_answers
+    this.question = question
+    this.type = type
+    this.is_correct_answer = null // Value is null when not yet answered.
   }
 
   /**
@@ -38,7 +38,6 @@ export default class QuizQuestion {
    * @returns {string[]}
    */
   getRandomizedAnswerOptions() {
-    return [this.correct_answer, ...this.incorrect_answers]
-      .sort(() => Math.random() - 0.5);
+    return [this.correct_answer, ...this.incorrect_answers].sort(() => Math.random() - 0.5)
   }
 }

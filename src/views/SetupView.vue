@@ -12,21 +12,23 @@
         <span v-if="loading" :class="$style.spinner"></span>
         <span v-else>Start</span>
       </button>
-      <p :class="$style.error" v-if="error">Oops... Something went wrong. Please try again in a bit.</p>
+      <p :class="$style.error" v-if="error">
+        Oops... Something went wrong. Please try again in a bit.
+      </p>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useInitGame } from '@/composables/useInitGame.js';
+import { ref } from 'vue'
+import { useInitGame } from '@/composables/useInitGame.js'
 
-const selectedDifficulty = ref('easy');
-const { loading, error, startGame } = useInitGame();
+const selectedDifficulty = ref('easy')
+const { loading, error, startGame } = useInitGame()
 
 const handleStartClick = async () => {
-  await startGame(selectedDifficulty.value);
-};
+  await startGame(selectedDifficulty.value)
+}
 </script>
 
 <style module>
@@ -75,7 +77,7 @@ const handleStartClick = async () => {
 }
 
 .select:focus {
-  border-color: #007BFF;
+  border-color: #007bff;
   outline: none;
 }
 
@@ -84,7 +86,7 @@ const handleStartClick = async () => {
   padding: 0.5rem;
   font-size: 1rem;
   color: white;
-  background-color: #007BFF;
+  background-color: #007bff;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -114,7 +116,11 @@ const handleStartClick = async () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

@@ -1,19 +1,23 @@
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 
 export const useGameStore = defineStore('game', {
   state: () => ({
-    questions: [],
+    questions: []
   }),
   actions: {
     setQuestions(questions) {
-      this.questions = questions;
+      this.questions = questions
     },
     setCorrectAnswer(questionId, answer) {
-      const question = this.questions.find(q => q.id === questionId);
-      if (question && answer === question.correct_answer) {
-        return question.is_correct_answer = true;
+      const question = this.questions.find((q) => q.id === questionId)
+
+      if (!question) {
+        // Question not found. This should not happen.
+        return false
       }
-      return question.is_correct_answer = false;
-    },
-  },
-});
+
+      question.is_correct_answer = answer === question.correct_answer
+      return question.is_correct_answer
+    }
+  }
+})

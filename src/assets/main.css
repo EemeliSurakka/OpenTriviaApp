@@ -1,6 +1,7 @@
 @import './base.css';
 
 body {
+    min-height: 100vh;
     font-size: 16px;
     font-family: 'Roboto', cursive;
     margin: 0;
@@ -12,4 +13,10 @@ body {
 *::before,
 *::after {
     box-sizing: inherit;
+}
+
+@font-face {
+    font-family: 'Kalam';
+    src: url('@/assets/fonts/Kalam-Regular.ttf') format('truetype');
+    font-weight: 400;
 }

@@ -1,86 +1,52 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import axios from 'axios';
-import { triviaService, fetchNewToken } from './triviaService.js';
+import { triviaService } from '@/services/triviaService';
 
 vi.mock('axios');
 
-const API_URL = 'https://opentdb.com/api.php?amount=10';
-const TOKEN_URL = 'https://opentdb.com/api_token.php?command=request';
-
 describe('triviaService', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    vi.clearAllMocks();
+  const mockTokenService = vi.fn();
+
+  it('fetches trivia questions successfully with a token', async () => {
+    mockTokenService.mockResolvedValueOnce({ token: 'test-token', error: null });
+    axios.get.mockResolvedValueOnce({ data: { results: [{ question: 'Test question?' }] } });
+
+    const { data, error } = await triviaService('easy', mockTokenService);
+
+    expect(data).toEqual([{ question: 'Test question?' }]);
+    expect(error).toBeNull();
+    expect(axios.get).toHaveBeenCalledWith('https://opentdb.com/api.php?amount=10&token=test-token&difficulty=easy');
   });
 
-  it('should fetch new token and store it if not present in localStorage', async () => {
-    const mockTokenResponse = { data: { token: 'newToken123' } };
-    const mockTriviaResponse = { data: { results: ['question1', 'question2'] } };
+  it('fetches trivia questions successfully without a token', async () => {
+    mockTokenService.mockResolvedValueOnce({ token: null, error: null });
+    axios.get.mockResolvedValueOnce({ data: { results: [{ question: 'Test question?' }] } });
 
-    axios.get.mockImplementation((url) => {
-      if (url === TOKEN_URL) {
-        return Promise.resolve(mockTokenResponse);
-      } else if (url.startsWith(API_URL)) {
-        return Promise.resolve(mockTriviaResponse);
-      }
-    });
+    const { data, error } = await triviaService('medium', mockTokenService);
 
-    const result = await triviaService('easy');
-
-    expect(localStorage.getItem('trivia_token')).toBe('newToken123');
-    expect(result).toEqual(['question1', 'question2']);
+    expect(data).toEqual([{ question: 'Test question?' }]);
+    expect(error).toBeNull();
+    expect(axios.get).toHaveBeenCalledWith('https://opentdb.com/api.php?amount=10&difficulty=medium');
   });
 
-  it('should fetch trivia questions with the existing token in localStorage', async () => {
-    localStorage.setItem('trivia_token', 'existingToken456');
-    localStorage.setItem('trivia_token_timestamp', Date.now().toString());
+  it('handles token fetch failure by making the query without the token', async () => {
+    mockTokenService.mockResolvedValueOnce({ token: null, error: 'Token fetch failed' });
+    axios.get.mockResolvedValueOnce({ data: { results: [{ question: 'Test question?' }] } });
 
-    const mockTriviaResponse = { data: { results: ['question1', 'question2'] } };
+    const { data, error } = await triviaService('medium', mockTokenService);
 
-    axios.get.mockResolvedValue(mockTriviaResponse);
-
-    const result = await triviaService('medium');
-
-    expect(localStorage.getItem('trivia_token')).toBe('existingToken456');
-    expect(result).toEqual(['question1', 'question2']);
+    expect(data).toEqual([{ question: 'Test question?' }]);
+    expect(error).toBeNull();
+    expect(axios.get).toHaveBeenCalledWith('https://opentdb.com/api.php?amount=10&difficulty=medium');
   });
 
-  it('should fetch a new token if the existing token is expired', async () => {
-    localStorage.setItem('trivia_token', 'expiredToken789');
-    const expiredTimestamp = Date.now() - (4 * 60 * 60 * 1000); // 4 hours ago
-    localStorage.setItem('trivia_token_timestamp', expiredTimestamp.toString());
+  it('handles API request failure', async () => {
+    mockTokenService.mockResolvedValueOnce({ token: 'test-token', error: null });
+    axios.get.mockRejectedValueOnce('API request failed');
 
-    const mockNewTokenResponse = { data: { token: 'newToken123' } };
-    const mockTriviaResponse = { data: { results: ['question1', 'question2'] } };
+    const { data, error } = await triviaService('medium', mockTokenService);
 
-    axios.get.mockImplementation((url) => {
-      if (url === TOKEN_URL) {
-        return Promise.resolve(mockNewTokenResponse);
-      } else if (url.startsWith(API_URL)) {
-        return Promise.resolve(mockTriviaResponse);
-      }
-    });
-
-    const result = await triviaService('hard');
-
-    expect(localStorage.getItem('trivia_token')).toBe('newToken123');
-    expect(result).toEqual(['question1', 'question2']);
-  });
-
-  it('should handle error if fetching new token fails', async () => {
-    axios.get.mockRejectedValue('Network Error');
-
-    await expect(fetchNewToken()).rejects.toThrow('Failed to fetch a new token');
-  });
-
-  it('should handle error if fetching trivia questions fails', async () => {
-    localStorage.setItem('trivia_token', 'existingToken456');
-    localStorage.setItem('trivia_token_timestamp', Date.now().toString());
-
-    axios.get.mockRejectedValue('Network Error');
-
-    const result = await triviaService('medium');
-
-    expect(result).toEqual([]);
+    expect(data).toEqual([]);
+    expect(error).toBe('Failed to fetch trivia questions');
   });
 });

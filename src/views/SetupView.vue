@@ -8,30 +8,31 @@
         <option value="medium">Medium</option>
         <option value="hard">Hard</option>
       </select>
-      <button @click="getTrivia" :class="$style.button">Start</button>
+      <button @click="handleStartClick" :class="$style.button">Start</button>
+      <p v-if="loading">Loading...</p>
+      <p v-if="error">{{ error }}</p>
     </div>
   </section>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { triviaService } from '@/services/triviaService.js';
+import { useInitGame } from '@/composables/useInitGame.js';
+import { useNavigation } from '@/composables/useNavigation';
 
 const selectedDifficulty = ref('easy');
+const { navigateTo } = useNavigation();
+const { loading, error, startGame } = useInitGame();
 
-async function getTrivia() {
-  const token = await triviaService(selectedDifficulty.value);
-  console.log(token);
-}
+const handleStartClick = async () => {
+  await startGame(selectedDifficulty.value);
+  if (!error.value) {
+    navigateTo('/quiz');
+  }
+};
 </script>
 
 <style module>
-@font-face {
-  font-family: 'Kalam';
-  src: url('@/assets/fonts/Kalam-Regular.ttf') format('truetype');
-  font-weight: 400;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -56,7 +57,7 @@ async function getTrivia() {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background-color: #2c3e50;
+  background-color: var(--primary-color);
 }
 
 .label {

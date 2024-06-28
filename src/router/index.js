@@ -7,17 +7,25 @@ const router = createRouter({
     {
       path: '/',
       name: 'setup',
+      meta: {
+        title: 'Trivia night - Setup'
+      },
       component: SetupView
     },
     {
       path: '/quiz',
+      meta: {
+        title: 'Trivia night - Quiz'
+      },
       name: 'quiz',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/QuizView.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || 'Trivia night'
+  next()
 })
 
 export default router

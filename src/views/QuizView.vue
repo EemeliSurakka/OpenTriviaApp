@@ -40,7 +40,7 @@ import { useQuiz } from '@/composables/useQuiz.js'
 import QuizQuestion from '@/components/QuizQuestion.vue'
 import AnswerCard from '@/components/AnswerCard.vue'
 import AnswersTracker from '@/components/AnswersTracker.vue'
-import FeedbackMessage from '@/components/FeedbackMessage.vue' // Import the new component
+import FeedbackMessage from '@/components/FeedbackMessage.vue'
 
 const {
   questions,

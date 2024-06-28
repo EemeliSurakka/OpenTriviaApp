@@ -12,7 +12,7 @@ describe('SetupView', () => {
     })
   }))
 
-  it('renders correctly', () => {
+  it('renders the component', () => {
     const wrapper = mount(SetupView)
     expect(wrapper.find('h1').text()).toBe('Trivia Night')
     expect(wrapper.find('label').text()).toBe('Select Difficulty:')

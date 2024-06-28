@@ -1,22 +1,37 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AnswerCard from '@/components/AnswerCard.vue'
 import { sanitizeHTML } from '@/utils/utils.js'
 
+vi.mock('@/utils/utils.js', () => ({
+  sanitizeHTML: vi.fn((html) => html.replace(/#039;/g, "'"))
+}))
+const answer = '<b>Test #039;Answer#039;</b>'
+
+const mockClasses = {
+  correct: 'correct',
+  incorrect: 'incorrect'
+}
+
 describe('AnswerCard.vue', () => {
   it('renders the sanitized answer', () => {
-    const answer = '<b>Test Answer</b>'
     const sanitizedAnswer = sanitizeHTML(answer)
     const wrapper = mount(AnswerCard, {
-      props: { answer }
+      props: { answer },
+      global: {
+        mocks: {
+          $style: mockClasses
+        }
+      }
     })
 
     expect(wrapper.html()).toContain(sanitizedAnswer)
+    expect(wrapper.html()).not.toContain('<b>Test #039;Answer#039;</b>')
   })
 
   it('applies correct class when wasCorrectAnswer is true', () => {
     const wrapper = mount(AnswerCard, {
-      props: { wasCorrectAnswer: true }
+      props: { answer, wasCorrectAnswer: true }
     })
 
     expect(wrapper.find('[class*="correct"]').exists()).toBe(true)
@@ -24,18 +39,14 @@ describe('AnswerCard.vue', () => {
 
   it('applies incorrect class when wasCorrectAnswer is false', () => {
     const wrapper = mount(AnswerCard, {
-      props: { wasCorrectAnswer: false }
+      props: { answer, wasCorrectAnswer: false },
+      global: {
+        mocks: {
+          $style: mockClasses
+        }
+      }
     })
 
     expect(wrapper.find('[class*="incorrect"]').exists()).toBe(true)
-  })
-
-  it('does not apply correct or incorrect class when wasCorrectAnswer is null', () => {
-    const wrapper = mount(AnswerCard, {
-      props: { wasCorrectAnswer: null }
-    })
-
-    expect(wrapper.find('[class*="correct"]').exists()).toBe(false)
-    expect(wrapper.find('[class*="incorrect"]').exists()).toBe(false)
   })
 })

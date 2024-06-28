@@ -11,7 +11,7 @@ vi.mock('vue-router')
 describe('useInitGame', () => {
   let gameStoreMock
   let routerMock
-  let startGame
+  let startNewGame
 
   beforeEach(() => {
     gameStoreMock = {
@@ -25,8 +25,8 @@ describe('useInitGame', () => {
     }
     useRouter.mockReturnValue(routerMock)
 
-    const { startGame: initStartGame } = useInitGame()
-    startGame = initStartGame
+    const { startGame } = useInitGame()
+    startNewGame = startGame
   })
 
   it('should initialize loading and error as refs', () => {
@@ -36,10 +36,10 @@ describe('useInitGame', () => {
   })
 
   it('should navigate to /quiz if questions are set and no error', async () => {
-    gameStoreMock.questions = [{}] // Simulate questions being set
     triviaService.mockResolvedValue({ data: [], error: null })
+    gameStoreMock.questions = [{}]
 
-    await startGame('easy')
+    await startNewGame('easy')
 
     expect(routerMock.push).toHaveBeenCalledWith('/quiz')
   })
@@ -47,16 +47,16 @@ describe('useInitGame', () => {
   it('should not navigate to /quiz if there is an error', async () => {
     triviaService.mockResolvedValue({ data: null, error: 'Service Error' })
 
-    await startGame('easy')
+    await startNewGame('easy')
 
     expect(routerMock.push).not.toHaveBeenCalled()
   })
 
   it('should not navigate to /quiz if no questions are set', async () => {
-    gameStoreMock.questions = [] // No questions set
     triviaService.mockResolvedValue({ data: [], error: null })
+    gameStoreMock.questions = []
 
-    await startGame('easy')
+    await startNewGame('easy')
 
     expect(routerMock.push).not.toHaveBeenCalled()
   })

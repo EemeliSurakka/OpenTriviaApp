@@ -12,8 +12,7 @@ export const useGameStore = defineStore('game', {
       const question = this.questions.find((q) => q.id === questionId)
 
       if (!question) {
-        // Question not found. This should not happen.
-        return false
+        throw new Error('Question not found')
       }
 
       question.is_correct_answer = answer === question.correct_answer

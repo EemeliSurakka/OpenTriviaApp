@@ -17,7 +17,7 @@ describe('triviaTokenService', () => {
 
   it('should return stored token if it exists and is not expired', async () => {
     const mockToken = 'mocked_token'
-    const mockTimestamp = Date.now().toString() // current time
+    const mockTimestamp = Date.now().toString()
 
     localStorage.setItem(TOKEN_KEY, mockToken)
     localStorage.setItem(TOKEN_TIMESTAMP_KEY, mockTimestamp)
@@ -30,6 +30,8 @@ describe('triviaTokenService', () => {
   it('should fetch a new token if there is no stored token', async () => {
     const newToken = 'new_token'
 
+    expect(localStorage.getItem(TOKEN_KEY)).toEqual(null)
+
     axios.get.mockResolvedValue({ data: { token: newToken } })
 
     const result = await triviaTokenService()
@@ -39,11 +41,11 @@ describe('triviaTokenService', () => {
   })
 
   it('should fetch a new token if the stored token is expired', async () => {
-    const mockToken = 'mocked_token'
-    const expiredTimestamp = (Date.now() - TOKEN_EXPIRATION_HOURS * 60 * 60 * 1000 - 1).toString() // just over 3 hours ago
+    const initialToken = 'mocked_token'
+    const expiredTimestamp = (Date.now() - TOKEN_EXPIRATION_HOURS * 60 * 60 * 1000).toString()
     const newToken = 'new_token'
 
-    localStorage.setItem(TOKEN_KEY, mockToken)
+    localStorage.setItem(TOKEN_KEY, initialToken)
     localStorage.setItem(TOKEN_TIMESTAMP_KEY, expiredTimestamp)
 
     axios.get.mockResolvedValue({ data: { token: newToken } })

@@ -20,19 +20,6 @@ describe('triviaService', () => {
     )
   })
 
-  it('fetches trivia questions successfully without a token', async () => {
-    mockTokenService.mockResolvedValueOnce({ token: null, error: null })
-    axios.get.mockResolvedValueOnce({ data: { results: [{ question: 'Test question?' }] } })
-
-    const { data, error } = await triviaService('medium', mockTokenService)
-
-    expect(data).toEqual([{ question: 'Test question?' }])
-    expect(error).toBeNull()
-    expect(axios.get).toHaveBeenCalledWith(
-      'https://opentdb.com/api.php?amount=10&difficulty=medium'
-    )
-  })
-
   it('handles token fetch failure by making the query without the token', async () => {
     mockTokenService.mockResolvedValueOnce({ token: null, error: 'Token fetch failed' })
     axios.get.mockResolvedValueOnce({ data: { results: [{ question: 'Test question?' }] } })

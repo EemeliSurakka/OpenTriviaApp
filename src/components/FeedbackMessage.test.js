@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import FeedbackMessage from '@/components/FeedbackMessage.vue'
+import FeedbackMessage from '@/components/FeedbackMessage.vue' // Adjust the path accordingly
 
 const mockClasses = {
   feedbackMessage: 'feedbackMessage',

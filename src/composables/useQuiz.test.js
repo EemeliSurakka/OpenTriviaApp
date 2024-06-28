@@ -44,7 +44,7 @@ describe('useQuiz', () => {
     expect(feedbackMessage.value).toBe('')
   })
 
-  it('should update questions and navigate when questions are set', async () => {
+  it('should update questions', async () => {
     const gameStore = useGameStore()
     const { questions } = useQuiz()
     const newQuestions = [
@@ -56,17 +56,17 @@ describe('useQuiz', () => {
       }
     ]
 
-    gameStore.setQuestions(newQuestions) // Update questions in the store
+    expect(questions.value).toEqual([])
+    gameStore.setQuestions(newQuestions)
 
     await nextTick()
 
     expect(questions.value).toEqual(newQuestions)
-    expect(routerMock.push).toHaveBeenCalledTimes(1)
   })
 
   it('should shuffle answers and reset selection on new question', async () => {
     const gameStore = useGameStore()
-    const { currentQuestionIndex, shuffledAnswers, selectedAnswer, isCorrect } = useQuiz()
+    const { shuffledAnswers, selectedAnswer, isCorrect } = useQuiz()
     const newQuestions = [
       {
         id: 1,
@@ -75,11 +75,7 @@ describe('useQuiz', () => {
         correct_answer: 'A'
       }
     ]
-
     gameStore.setQuestions(newQuestions)
-    await nextTick()
-
-    currentQuestionIndex.value = 0
     await nextTick()
 
     expect(shuffledAnswers.value).toEqual(['A', 'B', 'C', 'D'])
@@ -87,9 +83,9 @@ describe('useQuiz', () => {
     expect(isCorrect.value).toBeNull()
   })
 
-  it('should handle answer selection correctly', async () => {
+  it('should set selectedAnswer to given value and isCorrect to true when answer is correct', async () => {
     const gameStore = useGameStore()
-    const { currentQuestionIndex, handleAnswerClick, selectedAnswer, isCorrect } = useQuiz()
+    const { handleAnswerClick, selectedAnswer, isCorrect } = useQuiz()
     const newQuestions = [
       {
         id: 1,
@@ -102,10 +98,6 @@ describe('useQuiz', () => {
     gameStore.setQuestions(newQuestions)
     await nextTick()
 
-    currentQuestionIndex.value = 0
-    await nextTick()
-
-    gameStore.setCorrectAnswer = vi.fn().mockReturnValue(true)
     handleAnswerClick('A')
     await nextTick()
 
@@ -148,7 +140,7 @@ describe('useQuiz', () => {
 
   it('should provide correct feedback message', async () => {
     const gameStore = useGameStore()
-    const { currentQuestionIndex, selectedAnswer, isCorrect, feedbackMessage } = useQuiz()
+    const { selectedAnswer, isCorrect, feedbackMessage } = useQuiz()
     const newQuestions = [
       {
         id: 1,
@@ -159,9 +151,6 @@ describe('useQuiz', () => {
     ]
 
     gameStore.setQuestions(newQuestions)
-    await nextTick()
-
-    currentQuestionIndex.value = 0
     await nextTick()
 
     selectedAnswer.value = 'A'

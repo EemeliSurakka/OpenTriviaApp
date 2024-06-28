@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGameStore } from '@/stores/useGameStore'
 
@@ -34,28 +34,21 @@ export function useQuiz() {
     }
   })
 
-  watch(
-    () => gameStore.questions,
-    (newQuestions) => {
-      questions.value = newQuestions
-      if (!newQuestions || newQuestions.length === 0) {
-        router.push('/')
-      }
-    },
-    { immediate: true }
-  )
+  watchEffect(() => {
+    questions.value = gameStore.questions
+    if (currentQuestionIndex.value === questions.value.length) {
+      router.push('/')
+    }
+  })
 
-  watch(
-    currentQuestion,
-    (newQuestion) => {
-      if (newQuestion) {
-        shuffledAnswers.value = newQuestion.getRandomizedAnswerOptions()
-        selectedAnswer.value = null
-        isCorrect.value = null
-      }
-    },
-    { immediate: true }
-  )
+  watchEffect(() => {
+    const newQuestion = currentQuestion.value
+    if (newQuestion) {
+      shuffledAnswers.value = newQuestion.getRandomizedAnswerOptions()
+      selectedAnswer.value = null
+      isCorrect.value = null
+    }
+  })
 
   const handleAnswerClick = (answer) => {
     if (selectedAnswer.value === null) {

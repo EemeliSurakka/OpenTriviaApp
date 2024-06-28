@@ -46,7 +46,7 @@ describe('QuizView', () => {
     })
   })
 
-  it('renders the component correctly', () => {
+  it('renders the component', () => {
     expect(wrapper.findComponent({ name: 'AnswersTracker' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'QuizQuestion' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'AnswerCard' }).exists()).toBe(true)

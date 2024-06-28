@@ -26,7 +26,7 @@ describe('useGameStore', () => {
 
   it('should set is_correct_answer to true for correct answer', () => {
     const questions = [
-      { id: 1, question: 'What is 2 + 2?', correct_answer: '4', is_correct_answer: false }
+      { id: 1, question: 'What is 2 + 2?', correct_answer: '4', is_correct_answer: null }
     ]
 
     store.setQuestions(questions)
@@ -36,7 +36,7 @@ describe('useGameStore', () => {
 
   it('should set is_correct_answer to false for incorrect answer', () => {
     const questions = [
-      { id: 1, question: 'What is 2 + 2?', correct_answer: '4', is_correct_answer: false }
+      { id: 1, question: 'What is 2 + 2?', correct_answer: '4', is_correct_answer: null }
     ]
 
     store.setQuestions(questions)
@@ -44,13 +44,12 @@ describe('useGameStore', () => {
     expect(store.questions[0].is_correct_answer).toBe(false)
   })
 
-  it('should return false if question is not found', () => {
+  it('should throw an error if question is not found', () => {
     const questions = [
       { id: 1, question: 'What is 2 + 2?', correct_answer: '4', is_correct_answer: false }
     ]
 
     store.setQuestions(questions)
-    const result = store.setCorrectAnswer(2, '4')
-    expect(result).toBe(false)
-  })
+    expect(() => store.setCorrectAnswer(2, '4')).toThrowError('Question not found')
+  });
 })
